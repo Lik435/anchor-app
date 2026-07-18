@@ -1,839 +1,550 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <link rel="manifest" href="manifest.json">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Anchor</title>
-  
-  <!-- PWA Meta Tags -->
-  <meta name="theme-color" content="#121214">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Anchor">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23121214'/><circle cx='50' cy='50' r='18' stroke='%238A9AAB' stroke-width='6' fill='none'/></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anchor</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FFFFFF;
+    --surface: #F7F7F5;
+    --border: #E5E5E1;
+    --text: #1A1A1A;
+    --text-dim: #6E6E6E;
+    --accent: #B8935A;
+    --accent-soft: #F1E8DA;
+    --user-bubble: #F0F0EE;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  .app {
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+  }
 
-  <!-- Minimal PWA Manifest Injection -->
-  <script>
-    const manifest = {
-      name: "Anchor",
-      short_name: "Anchor",
-      start_url: "./",
-      display: "standalone",
-      background_color: "#121214",
-      theme_color: "#121214",
-      icons: [{
-        src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23121214'/><circle cx='50' cy='50' r='18' stroke='%238A9AAB' stroke-width='6' fill='none'/></svg>",
-        sizes: "192x192 512x512",
-        type: "image/svg+xml"
-      }]
-    };
-    const blob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
-    const manifestUrl = URL.createObjectURL(blob);
-    const link = document.createElement('link');
-    link.rel = 'manifest';
-    link.href = manifestUrl;
-    document.head.appendChild(link);
-  </script>
+  /* HEADER */
+  .app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .brand { display: flex; align-items: center; gap: 8px; }
+  .brand-mark {
+    width: 26px; height: 26px;
+    background: var(--text);
+    border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .brand-mark svg { width: 14px; height: 14px; }
+  .brand h1 { font-size: 16px; font-weight: 600; margin: 0; }
+  .header-actions { display: flex; align-items: center; gap: 14px; }
+  .header-actions button {
+    background: none; border: none; color: var(--text-dim);
+    font-size: 13px; font-weight: 500; cursor: pointer; padding: 0;
+  }
 
-  <style>
-    :root {
-      --bg: #F9F9FB;
-      --surface: #FFFFFF;
-      --surface-border: #E4E4E7;
-      --text: #18181B;
-      --text-muted: #71717A;
-      --accent: #4A5D6E;
-      --accent-light: #F0F4F8;
-      --user-msg: #F4F4F5;
-      --radius: 8px;
-      --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
-    }
+  /* STREAK */
+  .streak-bar {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 12px 20px 0;
+  }
+  .streak-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--border);
+  }
+  .streak-dot.filled { background: var(--accent); }
+  .streak-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-left: auto;
+    letter-spacing: 0.03em;
+  }
 
-    [data-theme="dark"] {
-      --bg: #121214;
-      --surface: #18181B;
-      --surface-border: #27272A;
-      --text: #F4F4F5;
-      --text-muted: #A1A1AA;
-      --accent: #8A9AAB;
-      --accent-light: #1E262E;
-      --user-msg: #27272A;
-    }
+  /* NAV */
+  nav {
+    display: flex;
+    padding: 0 20px;
+    gap: 4px;
+    margin-top: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  nav button {
+    flex: 1;
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 10px 0;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+  }
+  nav button.active {
+    color: var(--text);
+    border-bottom-color: var(--accent);
+  }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-    }
+  .screen { display: none; flex: 1; flex-direction: column; padding: 20px; }
+  .screen.active { display: flex; }
 
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      font-family: var(--font);
-      font-size: 15px;
-      line-height: 1.5;
-      display: flex;
-      justify-content: center;
-      min-height: 100vh;
-      min-height: -webkit-fill-available;
-    }
+  /* CHAT — ChatGPT style: assistant = plain text, no bubble */
+  #chatLog {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+    padding-bottom: 16px;
+  }
+  .msg { display: flex; }
+  .msg.assistant { justify-content: flex-start; }
+  .msg.user { justify-content: flex-end; }
+  .msg-text {
+    font-size: 14.5px;
+    line-height: 1.6;
+    max-width: 88%;
+  }
+  .msg.assistant .msg-text {
+    color: var(--text);
+    padding: 0;
+  }
+  .msg.user .msg-text {
+    background: var(--user-bubble);
+    color: var(--text);
+    padding: 10px 14px;
+    border-radius: 14px;
+  }
 
-    .app-container {
-      width: 100%;
-      max-width: 480px;
-      height: 100vh;
-      height: -webkit-fill-available;
-      display: flex;
-      flex-direction: column;
-      background: var(--bg);
-      position: relative;
-    }
+  .chat-input-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 6px;
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    margin-top: 12px;
+  }
+  .chat-input-row input {
+    flex: 1;
+    background: none;
+    border: none;
+    color: var(--text);
+    padding: 6px 10px;
+    font-family: var(--font-body);
+    font-size: 14px;
+  }
+  .chat-input-row input:focus { outline: none; }
+  .chat-input-row button {
+    background: var(--text);
+    color: var(--bg);
+    border: none;
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    font-size: 14px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
 
-    /* Header */
-    header {
-      padding: 16px 20px 12px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--surface-border);
-      background: var(--bg);
-      z-index: 10;
-    }
+  /* CHECK-IN */
+  .checkin-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px;
+    margin-top: 8px;
+  }
+  .checkin-card .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 10px;
+  }
+  .checkin-card p {
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: var(--text);
+    margin: 0 0 18px;
+  }
+  .checkin-card button {
+    background: var(--text);
+    color: var(--bg);
+    border: none;
+    padding: 11px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 13.5px;
+    cursor: pointer;
+    width: 100%;
+  }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+  /* MOOD */
+  .mood-prompt {
+    font-size: 15.5px;
+    font-weight: 500;
+    text-align: center;
+    margin: 8px 0 22px;
+  }
+  .mood-row {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 26px;
+  }
+  .mood-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    width: 58px; height: 58px;
+    border-radius: 16px;
+    font-size: 24px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .mood-btn:hover { border-color: var(--accent); }
+  .mood-history-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 10px;
+  }
+  .mood-entry {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12.5px;
+    color: var(--text-dim);
+    font-family: var(--font-mono);
+  }
+  .empty-state {
+    color: var(--text-dim);
+    font-size: 13px;
+    text-align: center;
+    padding: 20px 0;
+  }
 
-    .title {
-      font-size: 17px;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-    }
-
-    /* Streak Indicator */
-    .streak-container {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .streak-dot-wrapper {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 3px;
-    }
-
-    .streak-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      border: 1.5px solid var(--text-muted);
-      background: transparent;
-    }
-
-    .streak-dot.active {
-      background: var(--accent);
-      border-color: var(--accent);
-    }
-
-    .streak-day {
-      font-size: 9px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-    }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .icon-btn {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 13px;
-      cursor: pointer;
-      padding: 4px;
-      font-family: var(--font);
-    }
-
-    /* Navigation Tabs */
-    .tabs {
-      display: flex;
-      border-bottom: 1px solid var(--surface-border);
-      background: var(--bg);
-    }
-
-    .tab-btn {
-      flex: 1;
-      padding: 10px 0;
-      background: none;
-      border: none;
-      border-bottom: 2px solid transparent;
-      color: var(--text-muted);
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-    }
-
-    .tab-btn.active {
-      color: var(--text);
-      border-bottom-color: var(--accent);
-    }
-
-    /* Main View Area */
-    .view-content {
-      flex: 1;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-    }
-
-    .tab-view {
-      display: none;
-      flex: 1;
-      flex-direction: column;
-    }
-
-    .tab-view.active {
-      display: flex;
-    }
-
-    /* Top Action Bar for Daily Check-in */
-    .daily-bar {
-      padding: 12px 20px;
-      border-bottom: 1px solid var(--surface-border);
-      background: var(--surface);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .daily-bar-text {
-      font-size: 13px;
-      color: var(--text-muted);
-    }
-
-    .btn-secondary {
-      background: var(--accent-light);
-      color: var(--accent);
-      border: 1px solid transparent;
-      padding: 6px 12px;
-      border-radius: var(--radius);
-      font-size: 12px;
-      font-weight: 500;
-      cursor: pointer;
-    }
-
-    .btn-secondary:disabled {
-      opacity: 0.5;
-      cursor: default;
-    }
-
-    /* Chat Screen */
-    .chat-list {
-      flex: 1;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      overflow-y: auto;
-    }
-
-    .msg {
-      max-width: 88%;
-      padding: 12px 16px;
-      border-radius: var(--radius);
-      line-height: 1.5;
-      font-size: 14px;
-      word-break: break-word;
-    }
-
-    .msg.ai {
-      align-self: flex-start;
-      background: var(--surface);
-      border: 1px solid var(--surface-border);
-      color: var(--text);
-    }
-
-    .msg.user {
-      align-self: flex-end;
-      background: var(--user-msg);
-      color: var(--text);
-    }
-
-    .msg.system {
-      align-self: center;
-      font-size: 12px;
-      color: var(--text-muted);
-      background: transparent;
-      padding: 4px 8px;
-    }
-
-    /* Input Footer */
-    .chat-input-area {
-      padding: 12px 20px 20px 20px;
-      background: var(--bg);
-      border-top: 1px solid var(--surface-border);
-    }
-
-    .input-wrapper {
-      display: flex;
-      align-items: center;
-      background: var(--surface);
-      border: 1px solid var(--surface-border);
-      border-radius: var(--radius);
-      padding: 4px 8px 4px 14px;
-    }
-
-    .chat-input {
-      flex: 1;
-      border: none;
-      background: transparent;
-      color: var(--text);
-      font-family: var(--font);
-      font-size: 14px;
-      padding: 8px 0;
-      outline: none;
-    }
-
-    .chat-input::placeholder {
-      color: var(--text-muted);
-    }
-
-    .send-btn {
-      background: var(--accent);
-      color: #FFF;
-      border: none;
-      border-radius: 6px;
-      padding: 6px 12px;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      margin-left: 8px;
-    }
-
-    .send-btn:disabled {
-      opacity: 0.4;
-      cursor: default;
-    }
-
-    /* Mood Log Screen */
-    .mood-view {
-      padding: 20px;
-      gap: 24px;
-    }
-
-    .mood-selector {
-      background: var(--surface);
-      border: 1px solid var(--surface-border);
-      border-radius: var(--radius);
-      padding: 16px;
-    }
-
-    .mood-title {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-bottom: 12px;
-    }
-
-    .mood-options {
-      display: flex;
-      gap: 8px;
-    }
-
-    .mood-btn {
-      flex: 1;
-      padding: 10px;
-      background: var(--bg);
-      border: 1px solid var(--surface-border);
-      border-radius: var(--radius);
-      color: var(--text);
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      text-align: center;
-    }
-
-    .mood-btn:active {
-      border-color: var(--accent);
-      background: var(--accent-light);
-    }
-
-    .mood-history-title {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 12px;
-    }
-
-    .mood-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .mood-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 16px;
-      background: var(--surface);
-      border: 1px solid var(--surface-border);
-      border-radius: var(--radius);
-      font-size: 14px;
-    }
-
-    .mood-time {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    .empty-state {
-      font-size: 13px;
-      color: var(--text-muted);
-      text-align: center;
-      padding: 24px 0;
-    }
-
-    /* Settings / Key Modal */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.4);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      z-index: 100;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s ease;
-    }
-
-    .modal-overlay.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .modal {
-      background: var(--surface);
-      border: 1px solid var(--surface-border);
-      border-radius: var(--radius);
-      width: 100%;
-      max-width: 360px;
-      padding: 20px;
-    }
-
-    .modal-h2 {
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-
-    .modal-p {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-bottom: 16px;
-      line-height: 1.4;
-    }
-
-    .key-input {
-      width: 100%;
-      padding: 10px 12px;
-      background: var(--bg);
-      border: 1px solid var(--surface-border);
-      border-radius: var(--radius);
-      color: var(--text);
-      font-size: 13px;
-      margin-bottom: 16px;
-      outline: none;
-    }
-
-    .modal-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 8px;
-    }
-
-    .btn-primary {
-      background: var(--accent);
-      color: #FFF;
-      border: none;
-      padding: 8px 16px;
-      border-radius: var(--radius);
-      font-size: 13px;
-      cursor: pointer;
-    }
-  </style>
+  /* KEY MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.3);
+    align-items: center; justify-content: center;
+    padding: 20px;
+    z-index: 10;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal-box {
+    background: var(--bg);
+    border-radius: 16px;
+    padding: 24px;
+    max-width: 340px;
+    width: 100%;
+  }
+  .modal-box h3 { margin: 0 0 8px; font-size: 15px; }
+  .modal-box p { margin: 0 0 16px; font-size: 13px; color: var(--text-dim); }
+  .modal-box input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    margin-bottom: 14px;
+  }
+  .modal-box button {
+    width: 100%;
+    background: var(--text);
+    color: var(--bg);
+    border: none;
+    padding: 11px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 13.5px;
+    cursor: pointer;
+  }
+</style>
 </head>
 <body>
+<div class="app">
 
-  <div class="app-container">
-    <!-- Header -->
-    <header>
-      <div class="brand">
-        <span class="title">Anchor</span>
+  <div class="app-header">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round">
+          <circle cx="12" cy="6" r="2.5"/>
+          <line x1="12" y1="8.5" x2="12" y2="18"/>
+          <line x1="8" y1="10.5" x2="16" y2="10.5"/>
+          <path d="M 6 14 Q 6 18 12 18 Q 18 18 18 14"/>
+        </svg>
       </div>
-
-      <!-- Feature 4: 7-Day Streak Dot Row -->
-      <div class="streak-container" id="streakContainer"></div>
-
-      <div class="header-actions">
-        <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle Mode">Dark</button>
-        <button class="icon-btn" id="keyConfigBtn" aria-label="API Key">Key</button>
-      </div>
-    </header>
-
-    <!-- Navigation -->
-    <nav class="tabs">
-      <button class="tab-btn active" data-tab="chat">Chat</button>
-      <button class="tab-btn" data-tab="mood">Mood Log</button>
-    </nav>
-
-    <div class="view-content">
-      <!-- Chat Tab -->
-      <section class="tab-view active" id="chatView">
-        <!-- Feature 2: Daily Check-in Top Bar -->
-        <div class="daily-bar">
-          <span class="daily-bar-text" id="dailyBarStatus">Daily check-in available</span>
-          <button class="btn-secondary" id="dailyCheckInBtn">Check In</button>
-        </div>
-
-        <!-- Feature 1: Chat Message Container -->
-        <div class="chat-list" id="chatList"></div>
-
-        <div class="chat-input-area">
-          <div class="input-wrapper">
-            <input type="text" class="chat-input" id="userInput" placeholder="Share what you're working on or feeling..." autocomplete="off">
-            <button class="send-btn" id="sendBtn">Send</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- Feature 3: Mood Log Tab -->
-      <section class="tab-view mood-view" id="moodView">
-        <div class="mood-selector">
-          <div class="mood-title">How are you feeling right now?</div>
-          <div class="mood-options">
-            <button class="mood-btn" onclick="logMood('Good')">Good</button>
-            <button class="mood-btn" onclick="logMood('Okay')">Okay</button>
-            <button class="mood-btn" onclick="logMood('Low')">Low</button>
-          </div>
-        </div>
-
-        <div>
-          <div class="mood-history-title">Recent History</div>
-          <div class="mood-list" id="moodList"></div>
-        </div>
-      </section>
+      <h1>Anchor</h1>
+    </div>
+    <div class="header-actions">
+      <button onclick="openKeyModal()">Key</button>
     </div>
   </div>
 
-  <!-- API Key Modal -->
-  <div class="modal-overlay" id="keyModal">
-    <div class="modal">
-      <div class="modal-h2">Gemini API Key</div>
-      <div class="modal-p">Enter your Gemini API key to enable AI responses. Your key is stored locally in your browser.</div>
-      <input type="password" class="key-input" id="apiKeyInput" placeholder="AIzaSy...">
-      <div class="modal-actions">
-        <button class="btn-secondary" onclick="closeKeyModal()">Cancel</button>
-        <button class="btn-primary" onclick="saveApiKey()">Save Key</button>
-      </div>
+  <div class="streak-bar" id="streakBar"></div>
+
+  <nav>
+    <button class="nav-btn active" data-screen="chatScreen">Chat</button>
+    <button class="nav-btn" data-screen="checkinScreen">Check-in</button>
+    <button class="nav-btn" data-screen="moodScreen">Mood</button>
+  </nav>
+
+  <div id="chatScreen" class="screen active">
+    <div id="chatLog"></div>
+    <div class="chat-input-row">
+      <input id="chatInput" placeholder="Message Anchor..." />
+      <button onclick="sendMessage()">↑</button>
     </div>
   </div>
 
-  <script>
-    // System Prompt enforcing behavioral rules exactly
-    const SYSTEM_PROMPT = `You are Anchor, a daily AI companion for students preparing for exams and job interviews.
-Rules for your responses:
-- Be warm but not saccharine.
-- Keep responses concise (2 to 4 sentences maximum).
-- Always ask exactly one gentle follow-up question.
-- Never use generic motivational quotes or platitudes.
-- Address specifically what the user actually said.
-- Help them break down preparation stress, study plans, or interview anxiety rationally.`;
+  <div id="checkinScreen" class="screen">
+    <div class="checkin-card">
+      <div class="eyebrow">Today's check-in</div>
+      <p id="checkinText">Tap below and Anchor will check in on you, based on how things have been going.</p>
+      <button onclick="getCheckin()">Get today's check-in</button>
+    </div>
+  </div>
 
-    // State Management
-    let state = {
-      apiKey: localStorage.getItem('anchor_api_key') || '',
-      theme: localStorage.getItem('anchor_theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'),
-      messages: JSON.parse(localStorage.getItem('anchor_messages') || '[]'),
-      moods: JSON.parse(localStorage.getItem('anchor_moods') || '[]'),
-      engagementDates: JSON.parse(localStorage.getItem('anchor_engagement') || '[]'),
-      lastCheckIn: localStorage.getItem('anchor_last_checkin') || ''
-    };
+  <div id="moodScreen" class="screen">
+    <div class="mood-prompt">How are you feeling right now?</div>
+    <div class="mood-row">
+      <button class="mood-btn" onclick="logMood('good','🙂')">🙂</button>
+      <button class="mood-btn" onclick="logMood('okay','😐')">😐</button>
+      <button class="mood-btn" onclick="logMood('bad','😔')">😔</button>
+    </div>
+    <div class="mood-history-title">Last 14 entries</div>
+    <div id="moodHistory"></div>
+  </div>
 
-    // Initialize Theme
-    document.documentElement.setAttribute('data-theme', state.theme);
-    document.getElementById('themeToggleBtn').innerText = state.theme === 'dark' ? 'Light' : 'Dark';
+</div>
 
-    // Elements
-    const chatList = document.getElementById('chatList');
-    const userInput = document.getElementById('userInput');
-    const sendBtn = document.getElementById('sendBtn');
-    const dailyCheckInBtn = document.getElementById('dailyCheckInBtn');
-    const dailyBarStatus = document.getElementById('dailyBarStatus');
-    const streakContainer = document.getElementById('streakContainer');
-    const moodList = document.getElementById('moodList');
-    const keyModal = document.getElementById('keyModal');
-    const apiKeyInput = document.getElementById('apiKeyInput');
+<div class="modal-overlay" id="keyModal">
+  <div class="modal-box">
+    <h3>Gemini API Key</h3>
+    <p>Get a free key at aistudio.google.com/apikey. Stored only on this device.</p>
+    <input id="apiKeyInput" placeholder="Paste your API key" />
+    <button onclick="saveKey()">Save</button>
+  </div>
+</div>
 
-    // Startup Init
-    window.addEventListener('DOMContentLoaded', () => {
-      recordEngagement();
-      renderStreak();
-      renderChat();
-      renderMoods();
-      updateCheckInStatus();
+<script>
+// ================= CONFIG =================
+const NICHE_CONTEXT = "a student preparing for exams and job interviews, currently feeling the pressure of both.";
+const MODEL_NAME = "gemini-3.5-flash";
 
-      // Register Minimal Service Worker for PWA
-      if ('serviceWorker' in navigator) {
-        const swCode = `
-          self.addEventListener('install', e => self.skipWaiting());
-          self.addEventListener('activate', e => self.clients.claim());
-          self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => new Response('Offline'))));
-        `;
-        const blob = new Blob([swCode], {type: 'application/javascript'});
-        navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});
-      }
-    });
+// ================= STORAGE =================
+const store = {
+  get(key, fallback) {
+    try { return JSON.parse(localStorage.getItem(key)) ?? fallback; }
+    catch { return fallback; }
+  },
+  set(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+};
 
-    // Theme Switch
-    document.getElementById('themeToggleBtn').addEventListener('click', () => {
-      state.theme = state.theme === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', state.theme);
-      localStorage.setItem('anchor_theme', state.theme);
-      document.getElementById('themeToggleBtn').innerText = state.theme === 'dark' ? 'Light' : 'Dark';
-    });
+let messages = store.get("anchor_messages", []);
+let moods = store.get("anchor_moods", []);
+let streakDates = store.get("anchor_streak", []);
+let apiKey = store.get("anchor_api_key", "");
 
-    // Navigation Tabs
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.tab-view').forEach(v => v.classList.remove('active'));
-        e.target.classList.add('active');
-        document.getElementById(e.target.dataset.tab + 'View').classList.add('active');
-      });
-    });
+// ================= KEY MODAL =================
+function openKeyModal() {
+  document.getElementById("apiKeyInput").value = apiKey;
+  document.getElementById("keyModal").classList.add("active");
+}
+function saveKey() {
+  apiKey = document.getElementById("apiKeyInput").value.trim();
+  store.set("anchor_api_key", apiKey);
+  document.getElementById("keyModal").classList.remove("active");
+}
+if (!apiKey) openKeyModal();
 
-    // Engagement & Streak Logic (Feature 4)
-    function recordEngagement() {
-      const today = new Date().toISOString().split('T')[0];
-      if (!state.engagementDates.includes(today)) {
-        state.engagementDates.push(today);
-        // Keep last 30 days maximum
-        if (state.engagementDates.length > 30) state.engagementDates.shift();
-        localStorage.setItem('anchor_engagement', JSON.stringify(state.engagementDates));
-      }
+// ================= NAV =================
+document.querySelectorAll(".nav-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById(btn.dataset.screen).classList.add("active");
+    if (btn.dataset.screen === "moodScreen") renderMoodHistory();
+  });
+});
+
+// ================= STREAK =================
+function renderStreak() {
+  const bar = document.getElementById("streakBar");
+  const last7 = [...Array(7)].map((_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() - (6 - i));
+    return d.toDateString();
+  });
+  bar.innerHTML = last7.map(d =>
+    `<div class="streak-dot ${streakDates.includes(d) ? 'filled' : ''}"></div>`
+  ).join("") + `<div class="streak-label">${streakDates.filter(d => last7.includes(d)).length}/7 DAYS</div>`;
+}
+function markStreakToday() {
+  const today = new Date().toDateString();
+  if (!streakDates.includes(today)) {
+    streakDates.push(today);
+    store.set("anchor_streak", streakDates);
+  }
+  renderStreak();
+}
+
+// ================= CHAT =================
+function renderChat() {
+  const log = document.getElementById("chatLog");
+  if (messages.length === 0) {
+    log.innerHTML = `<div class="msg assistant"><div class="msg-text">Hey. I'm Anchor — here for the stretch you're in right now. What's on your mind today?</div></div>`;
+    return;
+  }
+  log.innerHTML = messages.map(m =>
+    `<div class="msg ${m.role === 'user' ? 'user' : 'assistant'}"><div class="msg-text">${escapeHtml(m.content)}</div></div>`
+  ).join("");
+  log.scrollTop = log.scrollHeight;
+}
+
+async function sendMessage() {
+  const input = document.getElementById("chatInput");
+  const text = input.value.trim();
+  if (!text) return;
+  if (!apiKey) { openKeyModal(); return; }
+  input.value = "";
+
+  messages.push({ role: "user", content: text });
+  store.set("anchor_messages", messages);
+  renderChat();
+  markStreakToday();
+
+  const log = document.getElementById("chatLog");
+  const loading = document.createElement("div");
+  loading.className = "msg assistant";
+  loading.innerHTML = `<div class="msg-text">...</div>`;
+  log.appendChild(loading);
+  log.scrollTop = log.scrollHeight;
+
+  try {
+    const reply = await callGemini(messages.slice(-10), "chat");
+    messages.push({ role: "assistant", content: reply });
+    store.set("anchor_messages", messages);
+    renderChat();
+  } catch (e) {
+    loading.querySelector(".msg-text").textContent = "Couldn't reach the server — check your API key.";
+  }
+}
+
+document.getElementById("chatInput").addEventListener("keydown", e => {
+  if (e.key === "Enter") sendMessage();
+});
+
+// ================= CHECK-IN =================
+async function getCheckin() {
+  if (!apiKey) { openKeyModal(); return; }
+  const el = document.getElementById("checkinText");
+  el.textContent = "Thinking...";
+  try {
+    const reply = await callGemini(messages.slice(-10), "checkin");
+    el.textContent = reply;
+    messages.push({ role: "assistant", content: reply });
+    store.set("anchor_messages", messages);
+    markStreakToday();
+  } catch (e) {
+    el.textContent = "Couldn't reach the server — check your API key.";
+  }
+}
+
+// ================= MOOD =================
+function logMood(mood, emoji) {
+  moods.unshift({ mood, emoji, time: new Date().toISOString() });
+  moods = moods.slice(0, 30);
+  store.set("anchor_moods", moods);
+  markStreakToday();
+  renderMoodHistory();
+}
+function renderMoodHistory() {
+  const el = document.getElementById("moodHistory");
+  if (moods.length === 0) {
+    el.innerHTML = `<div class="empty-state">No entries yet — tap a face above to log one.</div>`;
+    return;
+  }
+  el.innerHTML = moods.slice(0, 14).map(m =>
+    `<div class="mood-entry"><span>${m.emoji}</span><span>${new Date(m.time).toLocaleDateString()} ${new Date(m.time).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</span></div>`
+  ).join("");
+}
+
+// ================= GEMINI API CALL =================
+async function callGemini(history, mode) {
+  const systemPrompts = {
+    chat: `You are Anchor, a warm, grounded daily companion for ${NICHE_CONTEXT}. Keep replies short (2-4 sentences), specific to what they said, never generic. Ask one gentle follow-up question. No motivational quotes.`,
+    checkin: `You are Anchor, a daily companion for ${NICHE_CONTEXT}. Generate today's check-in message based on the recent conversation. Keep it short (2-3 sentences), warm, specific — reference something real from recent messages if possible. End with one light question.`
+  };
+
+  const contents = history.map(m => ({
+    role: m.role === "assistant" ? "model" : "user",
+    parts: [{ text: m.content }]
+  }));
+
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${apiKey}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents,
+        systemInstruction: { parts: [{ text: systemPrompts[mode] }] }
+      })
     }
+  );
 
-    function renderStreak() {
-      streakContainer.innerHTML = '';
-      const daysOfWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-      const today = new Date();
-      
-      // Render last 7 days ending today
-      for (let i = 6; i >= 0; i--) {
-        const d = new Date();
-        d.setDate(today.getDate() - i);
-        const dateStr = d.toISOString().split('T')[0];
-        const dayLabel = daysOfWeek[d.getDay()];
-        const isActive = state.engagementDates.includes(dateStr);
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData?.error?.message || "API error");
+  }
+  const data = await res.json();
+  return data.candidates[0].content.parts[0].text;
+}
 
-        const wrapper = document.createElement('div');
-        wrapper.className = 'streak-dot-wrapper';
-        wrapper.innerHTML = `
-          <div class="streak-dot ${isActive ? 'active' : ''}"></div>
-          <span class="streak-day">${dayLabel}</span>
-        `;
-        streakContainer.appendChild(wrapper);
-      }
-    }
+function escapeHtml(str) {
+  const div = document.createElement("div");
+  div.textContent = str;
+  return div.innerHTML;
+}
 
-    // Chat Logic (Feature 1)
-    function renderChat() {
-      chatList.innerHTML = '';
-      if (state.messages.length === 0) {
-        chatList.innerHTML = `<div class="msg system">Anchor is ready. Start by sharing what you are studying or preparing for today.</div>`;
-        return;
-      }
+// ================= INIT =================
+renderStreak();
+renderChat();
+renderMoodHistory();
 
-      state.messages.forEach(msg => {
-        const div = document.createElement('div');
-        div.className = `msg ${msg.role === 'user' ? 'user' : 'ai'}`;
-        div.innerText = msg.text;
-        chatList.appendChild(div);
-      });
-      chatList.scrollTop = chatList.scrollHeight;
-    }
-
-    async function sendMessage(overridePrompt = null) {
-      const text = overridePrompt || userInput.value.trim();
-      if (!text) return;
-
-      if (!state.apiKey) {
-        openKeyModal();
-        return;
-      }
-
-      if (!overridePrompt) {
-        userInput.value = '';
-        state.messages.push({ role: 'user', text });
-        renderChat();
-      }
-
-      recordEngagement();
-      renderStreak();
-
-      sendBtn.disabled = true;
-      dailyCheckInBtn.disabled = true;
-
-      // Show temporary typing indicator
-      const typingDiv = document.createElement('div');
-      typingDiv.className = 'msg ai';
-      typingDiv.id = 'typingIndicator';
-      typingDiv.innerText = '...';
-      chatList.appendChild(typingDiv);
-      chatList.scrollTop = chatList.scrollHeight;
-
-      // Maintain last 5-10 messages for context
-      const contextMessages = state.messages.slice(-8);
-
-      // Build Gemini API payload
-      const contents = contextMessages.map(m => ({
-        role: m.role === 'user' ? 'user' : 'model',
-        parts: [{ text: m.text }]
-      }));
-
-      // If override prompt (e.g. daily check-in trigger) append as instruction
-      if (overridePrompt) {
-        contents.push({
-          role: 'user',
-          parts: [{ text: overridePrompt }]
-        });
-      }
-
-      try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${state.apiKey}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            system_instruction: {
-              parts: [{ text: SYSTEM_PROMPT }]
-            },
-            contents: contents
-          })
-        });
-
-        const data = await response.json();
-        const indicator = document.getElementById('typingIndicator');
-        if (indicator) indicator.remove();
-
-        if (data.error) {
-          alert(`Gemini API Error: ${data.error.message || 'Check your key'}`);
-          if (data.error.code === 400 || data.error.status === 'UNAUTHENTICATED') {
-            openKeyModal();
-          }
-        } else if (data.candidates && data.candidates[0].content) {
-          const aiReply = data.candidates[0].content.parts[0].text.trim();
-          state.messages.push({ role: 'ai', text: aiReply });
-          localStorage.setItem('anchor_messages', JSON.stringify(state.messages));
-          renderChat();
-        }
-      } catch (err) {
-        const indicator = document.getElementById('typingIndicator');
-        if (indicator) indicator.remove();
-        alert('Failed to connect to Gemini API. Please check network or API key.');
-      } finally {
-        sendBtn.disabled = false;
-        dailyCheckInBtn.disabled = false;
-      }
-    }
-
-    userInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') sendMessage();
-    });
-    sendBtn.addEventListener('click', () => sendMessage());
-
-    // Feature 2: Daily Check-in Logic
-    function updateCheckInStatus() {
-      const today = new Date().toISOString().split('T')[0];
-      if (state.lastCheckIn === today) {
-        dailyBarStatus.innerText = 'Completed for today';
-        dailyCheckInBtn.disabled = true;
-      } else {
-        dailyBarStatus.innerText = 'Daily check-in available';
-        dailyCheckInBtn.disabled = false;
-      }
-    }
-
-    dailyCheckInBtn.addEventListener('click', () => {
-      const today = new Date().toISOString().split('T')[0];
-      state.lastCheckIn = today;
-      localStorage.setItem('anchor_last_checkin', today);
-      updateCheckInStatus();
-
-      const prompt = `[SYSTEM INSTRUCTION: Generate today's personalized daily check-in message based on our recent history. Keep it concise (2-3 sentences), warm, specific to my study/interview prep, and end with one question.]`;
-      sendMessage(prompt);
-    });
-
-    // Feature 3: Mood Log Logic
-    window.logMood = function(level) {
-      const now = new Date();
-      const timeStr = now.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ' · ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      
-      const moodEntry = { level, time: timeStr };
-      state.moods.unshift(moodEntry);
-      if (state.moods.length > 50) state.moods.pop();
-
-      localStorage.setItem('anchor_moods', JSON.stringify(state.moods));
-      recordEngagement();
-      renderStreak();
-      renderMoods();
-    };
-
-    function renderMoods() {
-      if (state.moods.length === 0) {
-        moodList.innerHTML = `<div class="empty-state">No mood logged yet today.</div>`;
-        return;
-      }
-
-      moodList.innerHTML = state.moods.map(m => `
-        <div class="mood-item">
-          <span>${m.level}</span>
-          <span class="mood-time">${m.time}</span>
-        </div>
-      `).join('');
-    }
-
-    // Modal / API Key Management
-    document.getElementById('keyConfigBtn').addEventListener('click', openKeyModal);
-
-    function openKeyModal() {
-      apiKeyInput.value = state.apiKey;
-      keyModal.classList.add('active');
-    }
-
-    function closeKeyModal() {
-      keyModal.classList.remove('active');
-    }
-
-    function saveApiKey() {
-      const val = apiKeyInput.value.trim();
-      state.apiKey = val;
-      localStorage.setItem('anchor_api_key', val);
-      closeKeyModal();
-    }
-  </script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js").catch(() => {});
+}
+</script>
 </body>
 </html>

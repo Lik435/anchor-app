@@ -456,7 +456,7 @@ async function sendMessage() {
     store.set("anchor_messages", messages);
     renderChat();
   } catch (e) {
-    loading.querySelector(".msg-text").textContent = "Couldn't reach the server — check your API key.";
+    loading.querySelector(".msg-text").textContent = "Error: " + e.message;
   }
 }
 
@@ -476,7 +476,7 @@ async function getCheckin() {
     store.set("anchor_messages", messages);
     markStreakToday();
   } catch (e) {
-    el.textContent = "Couldn't reach the server — check your API key.";
+    el.textContent = "Error: " + e.message;
   }
 }
 
@@ -524,8 +524,10 @@ async function callGemini(history, mode) {
   );
 
   if (!res.ok) {
-    const errData = await res.json().catch(() => ({}));
-    throw new Error(errData?.error?.message || "API error");
+    const errText = await res.text();
+    let msg = errText;
+    try { msg = JSON.parse(errText)?.error?.message || errText; } catch (e) {}
+    throw new Error(`HTTP ${res.status} — ${msg}`);
   }
   const data = await res.json();
   return data.candidates[0].content.parts[0].text;

@@ -5,20 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Anchor</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#FFFFFF">
+<meta name="theme-color" content="#FAF9F5">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #FFFFFF;
-    --surface: #F7F7F5;
-    --border: #E5E5E1;
-    --text: #1A1A1A;
-    --text-dim: #6E6E6E;
-    --accent: #B8935A;
-    --accent-soft: #F1E8DA;
-    --user-bubble: #F0F0EE;
+    --bg: #FAF9F5;
+    --surface: #F0EEE5;
+    --border: #E3E0D4;
+    --text: #2B2A26;
+    --text-dim: #83807A;
+    --accent: #C15F3C;
+    --accent-soft: #F3E1D6;
+    --user-bubble: #EFEAE0;
     --font-body: 'Inter', sans-serif;
+    --font-display: 'Fraunces', serif;
     --font-mono: 'IBM Plex Mono', monospace;
   }
   * { box-sizing: border-box; }
@@ -49,12 +50,12 @@
   .brand { display: flex; align-items: center; gap: 8px; }
   .brand-mark {
     width: 26px; height: 26px;
-    background: var(--text);
+    background: var(--accent);
     border-radius: 7px;
     display: flex; align-items: center; justify-content: center;
   }
   .brand-mark svg { width: 14px; height: 14px; }
-  .brand h1 { font-size: 16px; font-weight: 600; margin: 0; }
+  .brand h1 { font-family: var(--font-display); font-size: 17px; font-weight: 600; margin: 0; }
   .header-actions { display: flex; align-items: center; gap: 14px; }
   .header-actions button {
     background: none; border: none; color: var(--text-dim);
@@ -129,6 +130,8 @@
   .msg.assistant .msg-text {
     color: var(--text);
     padding: 0;
+    font-family: var(--font-display);
+    font-weight: 400;
   }
   .msg.user .msg-text {
     background: var(--user-bubble);
@@ -157,7 +160,7 @@
   }
   .chat-input-row input:focus { outline: none; }
   .chat-input-row button {
-    background: var(--text);
+    background: var(--accent);
     color: var(--bg);
     border: none;
     width: 34px; height: 34px;
@@ -184,13 +187,14 @@
     margin-bottom: 10px;
   }
   .checkin-card p {
-    font-size: 15.5px;
+    font-family: var(--font-display);
+    font-size: 16.5px;
     line-height: 1.6;
     color: var(--text);
     margin: 0 0 18px;
   }
   .checkin-card button {
-    background: var(--text);
+    background: var(--accent);
     color: var(--bg);
     border: none;
     padding: 11px 20px;
@@ -278,7 +282,7 @@
   }
   .modal-box button {
     width: 100%;
-    background: var(--text);
+    background: var(--accent);
     color: var(--bg);
     border: none;
     padding: 11px;
